@@ -23,6 +23,5 @@ public abstract class Persona {
         return correo;
     }
 
-    // Método abstracto - será implementado por las subclases
     public abstract String mostrarInformacion();
 }

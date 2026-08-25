@@ -13,6 +13,5 @@ public abstract class ProgramaAcademico {
         return nombrePrograma;
     }
 
-    // Método abstracto - será implementado por las subclases (POLIMORFISMO)
     public abstract boolean evaluarAprobacion(List<Float> notas);
 }

@@ -13,7 +13,6 @@ public class Bootcamp extends ProgramaAcademico {
         if (notas == null || notas.isEmpty()) {
             return false;
         }
-        // Exige estrictamente que ninguna nota individual sea menor a 14/20
         for (float n : notas) {
             if (n < 14.0f) {
                 return false;
