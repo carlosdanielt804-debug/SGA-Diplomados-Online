@@ -9,11 +9,14 @@ public class Diplomado extends ProgramaAcademico {
     }
 
     @Override
-    public boolean evaluarAprobacion(List<Double> notas) {
+    public boolean evaluarAprobacion(List<Float> notas) {
         if (notas == null || notas.isEmpty()) {
             return false;
         }
-        double promedio = notas.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-        return promedio >= 14.0;
+        float suma = 0;
+        for (float n : notas) {
+            suma += n;
+        }
+        return (suma / notas.size()) >= 14.0f;
     }
 }

@@ -9,13 +9,13 @@ public class Bootcamp extends ProgramaAcademico {
     }
 
     @Override
-    public boolean evaluarAprobacion(List<Double> notas) {
+    public boolean evaluarAprobacion(List<Float> notas) {
         if (notas == null || notas.isEmpty()) {
             return false;
         }
         // Exige estrictamente que ninguna nota individual sea menor a 14/20
-        for (Double nota : notas) {
-            if (nota < 14.0) {
+        for (float n : notas) {
+            if (n < 14.0f) {
                 return false;
             }
         }
