@@ -17,7 +17,6 @@ public:
     std::string getNombre() const;
     std::string getCorreo() const;
 
-    // Método virtual puro (abstracto)
     virtual std::string mostrarInformacion() const = 0;
 };
 

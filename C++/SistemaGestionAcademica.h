@@ -11,14 +11,14 @@
 
 class SistemaGestionAcademica {
 private:
-    std::vector<Alumno*> alumnos;        // Punteros para manejo de memoria
+    std::vector<Alumno*> alumnos;
     std::vector<Profesor*> profesores;
-    std::stack<AccionNota*> pilaComandos; // LIFO
-    std::queue<Alumno*> colaCertificados; // FIFO
+    std::stack<AccionNota*> pilaComandos;
+    std::queue<Alumno*> colaCertificados;
 
-    const std::string archivoAlumnos;
-    const std::string archivoProfesores;
-    const std::string archivoCertificados;
+    const std::string archivoAlumnos = "Data/alumnos.txt";
+    const std::string archivoProfesores = "Data/profesores.txt";
+    const std::string archivoCertificados = "Data/certificados_pendientes.txt";
 
     void guardarArchivosTxt();
     void cargarArchivosTxt();

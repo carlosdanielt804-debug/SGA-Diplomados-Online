@@ -13,11 +13,11 @@ int main() {
         std::cout << "1. Registrar Alumno\n";
         std::cout << "2. Registrar Profesor\n";
         std::cout << "3. Registrar Notas a un Alumno\n";
-        std::cout << "4. Deshacer Último Registro de Nota\n";
+        std::cout << "4. Deshacer Ultimo Registro de Nota\n";
         std::cout << "5. Generar Cola de Certificados\n";
         std::cout << "6. Mostrar Reporte General\n";
         std::cout << "7. Salir\n";
-        std::cout << "Seleccione una opción (1-7): ";
+        std::cout << "Seleccione una opcion (1-7): ";
 
         std::getline(std::cin, opcion);
 
@@ -34,10 +34,10 @@ int main() {
         } else if (opcion == "6") {
             sistema.mostrarReporteGeneral();
         } else if (opcion == "7") {
-            std::cout << "\n💾 Guardando datos y cerrando sistema de forma segura. ¡Hasta luego!\n";
+            std::cout << "\nGuardando datos y cerrando sistema de forma segura. Hasta luego!\n";
             break;
         } else {
-            std::cout << "❌ Opción inválida. Intente de nuevo.\n";
+            std::cout << "Opcion invalida. Intente de nuevo.\n";
         }
     }
 

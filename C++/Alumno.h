@@ -8,10 +8,10 @@
 class Alumno : public Persona {
 private:
     std::vector<float> notas;
-    ProgramaAcademico* programa;  // Puntero para manejo de memoria
+    ProgramaAcademico* programa;
 
 public:
-    Alumno(const std::string& cedula, const std::string& nombre, 
+    Alumno(const std::string& cedula, const std::string& nombre,
            const std::string& correo, ProgramaAcademico* programa);
     virtual ~Alumno();
 

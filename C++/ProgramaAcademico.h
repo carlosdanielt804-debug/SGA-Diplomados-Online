@@ -14,7 +14,6 @@ public:
 
     std::string getNombrePrograma() const;
 
-    // Método virtual puro (abstracto) - POLIMORFISMO
     virtual bool evaluarAprobacion(const std::vector<float>& notas) const = 0;
 };
 

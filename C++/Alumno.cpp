@@ -2,13 +2,11 @@
 #include <sstream>
 #include <iomanip>
 
-Alumno::Alumno(const std::string& cedula, const std::string& nombre, 
+Alumno::Alumno(const std::string& cedula, const std::string& nombre,
                const std::string& correo, ProgramaAcademico* programa)
     : Persona(cedula, nombre, correo), programa(programa) {}
 
-Alumno::~Alumno() {
-    // No eliminamos programa aquí porque lo gestiona SistemaGestionAcademica
-}
+Alumno::~Alumno() {}
 
 bool Alumno::agregarNota(float nota) {
     if (notas.size() < 3) {
@@ -53,13 +51,13 @@ bool Alumno::estaAprobado() const {
 std::string Alumno::mostrarInformacion() const {
     std::ostringstream oss;
     std::string estatus = estaAprobado() ? "APROBADO" : "REPROBADO";
-    
-    oss << "[Alumno] ID: " << cedula 
-        << " | Nombre: " << nombre 
+
+    oss << "[Alumno] ID: " << cedula
+        << " | Nombre: " << nombre
         << " | Correo: " << correo
         << " | Prog: " << programa->getNombrePrograma()
         << " | Prom: " << std::fixed << std::setprecision(1) << obtenerPromedio()
         << " | Estatus: " << estatus;
-    
+
     return oss.str();
 }

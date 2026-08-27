@@ -13,11 +13,11 @@ public class Main {
             System.out.println("1. Registrar Alumno");
             System.out.println("2. Registrar Profesor");
             System.out.println("3. Registrar Notas a un Alumno");
-            System.out.println("4. Deshacer Último Registro de Nota");
+            System.out.println("4. Deshacer Ultimo Registro de Nota");
             System.out.println("5. Generar Cola de Certificados");
             System.out.println("6. Mostrar Reporte General");
             System.out.println("7. Salir");
-            System.out.print("Seleccione una opción (1-7): ");
+            System.out.print("Seleccione una opcion (1-7): ");
 
             String opcion = sc.nextLine().trim();
 
@@ -34,10 +34,10 @@ public class Main {
             } else if (opcion.equals("6")) {
                 sistema.mostrarReporteGeneral();
             } else if (opcion.equals("7")) {
-                System.out.println("\n💾 Guardando datos y cerrando sistema de forma segura. ¡Hasta luego!");
+                System.out.println("\nGuardando datos y cerrando sistema de forma segura. Hasta luego!");
                 break;
             } else {
-                System.out.println("❌ Opción inválida. Intente de nuevo.");
+                System.out.println("Opcion invalida. Intente de nuevo.");
             }
         }
         sc.close();

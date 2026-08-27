@@ -10,9 +10,9 @@ public class SistemaGestionAcademica {
     private Stack<AccionNota> pilaComandos;
     private Queue<Alumno> colaCertificados;
 
-    private final String archivoAlumnos = "alumnos.txt";
-    private final String archivoProfesores = "profesores.txt";
-    private final String archivoCertificados = "certificados_pendientes.txt";
+    private final String archivoAlumnos = "Data/alumnos.txt";
+    private final String archivoProfesores = "Data/profesores.txt";
+    private final String archivoCertificados = "Data/certificados_pendientes.txt";
 
     public SistemaGestionAcademica() {
         this.alumnos = new ArrayList<>();
@@ -24,14 +24,14 @@ public class SistemaGestionAcademica {
 
     public void registrarAlumno(Scanner sc) {
         System.out.println("\n--- Registrar Alumno ---");
-        System.out.print("Cédula/ID: ");
+        System.out.print("Cedula/ID: ");
         String cedula = sc.nextLine().trim();
         System.out.print("Nombre Completo: ");
         String nombre = sc.nextLine().trim();
-        System.out.print("Correo Electrónico: ");
+        System.out.print("Correo Electronico: ");
         String correo = sc.nextLine().trim();
         System.out.println("Seleccione Programa: 1. Curso | 2. Diplomado | 3. Bootcamp");
-        System.out.print("Opción (1-3): ");
+        System.out.print("Opcion (1-3): ");
         String opc = sc.nextLine().trim();
 
         ProgramaAcademico prog;
@@ -42,23 +42,23 @@ public class SistemaGestionAcademica {
         } else if (opc.equals("3")) {
             prog = new Bootcamp();
         } else {
-            System.out.println("❌ Opción de programa inválida.");
+            System.out.println("Opcion de programa invalida.");
             return;
         }
 
         Alumno alumno = new Alumno(cedula, nombre, correo, prog);
         alumnos.add(alumno);
         guardarArchivosTxt();
-        System.out.println("✅ Alumno registrado exitosamente.");
+        System.out.println("Alumno registrado exitosamente.");
     }
 
     public void registrarProfesor(Scanner sc) {
         System.out.println("\n--- Registrar Profesor ---");
-        System.out.print("Cédula/ID: ");
+        System.out.print("Cedula/ID: ");
         String cedula = sc.nextLine().trim();
         System.out.print("Nombre Completo: ");
         String nombre = sc.nextLine().trim();
-        System.out.print("Correo Electrónico: ");
+        System.out.print("Correo Electronico: ");
         String correo = sc.nextLine().trim();
         System.out.print("Especialidad: ");
         String especialidad = sc.nextLine().trim();
@@ -68,12 +68,12 @@ public class SistemaGestionAcademica {
         Profesor profesor = new Profesor(cedula, nombre, correo, especialidad, materia);
         profesores.add(profesor);
         guardarArchivosTxt();
-        System.out.println("✅ Profesor registrado exitosamente.");
+        System.out.println("Profesor registrado exitosamente.");
     }
 
     public void registrarNota(Scanner sc) {
         System.out.println("\n--- Registrar Nota ---");
-        System.out.print("Ingrese Cédula del Alumno: ");
+        System.out.print("Ingrese Cedula del Alumno: ");
         String cedula = sc.nextLine().trim();
 
         Alumno alumno = null;
@@ -85,7 +85,7 @@ public class SistemaGestionAcademica {
         }
 
         if (alumno == null) {
-            System.out.println("❌ Alumno no encontrado.");
+            System.out.println("Alumno no encontrado.");
             return;
         }
 
@@ -93,26 +93,26 @@ public class SistemaGestionAcademica {
             System.out.print("Ingrese nota (0 - 20): ");
             float nota = Float.parseFloat(sc.nextLine().trim());
             if (nota < 0 || nota > 20) {
-                System.out.println("❌ La nota debe estar entre 0 y 20.");
+                System.out.println("La nota debe estar entre 0 y 20.");
                 return;
             }
 
             if (alumno.agregarNota(nota)) {
                 pilaComandos.push(new AccionNota(cedula, nota));
                 guardarArchivosTxt();
-                System.out.println("✅ Nota registrada exitosamente.");
+                System.out.println("Nota registrada exitosamente.");
             } else {
-                System.out.println("❌ El alumno ya tiene el máximo de 3 notas ingresadas.");
+                System.out.println("El alumno ya tiene el maximo de 3 notas ingresadas.");
             }
         } catch (NumberFormatException e) {
-            System.out.println("❌ Error: Ingrese un valor numérico válido.");
+            System.out.println("Error: Ingrese un valor numerico valido.");
         }
     }
 
     public void deshacerUltimaNota() {
-        System.out.println("\n--- Deshacer Último Registro de Nota (LIFO) ---");
+        System.out.println("\n--- Deshacer Ultimo Registro de Nota (LIFO) ---");
         if (pilaComandos.isEmpty()) {
-            System.out.println("⚠️ No hay acciones recientes para deshacer.");
+            System.out.println("No hay acciones recientes para deshacer.");
             return;
         }
 
@@ -121,7 +121,7 @@ public class SistemaGestionAcademica {
             if (a.getCedula().equals(ultimaAccion.getCedula())) {
                 a.deshacerNota();
                 guardarArchivosTxt();
-                System.out.println("✅ Se removió la nota " + ultimaAccion.getNota() + 
+                System.out.println("Se removio la nota " + ultimaAccion.getNota() +
                                    " del alumno " + a.getNombre() + ".");
                 return;
             }
@@ -157,9 +157,9 @@ public class SistemaGestionAcademica {
 
             writer.println("=========================================");
             writer.println("* Fin del reporte - Generado por SGA-DO *");
-            System.out.println("✅ Archivo '" + archivoCertificados + "' generado con éxito.");
+            System.out.println("Archivo '" + archivoCertificados + "' generado con exito.");
         } catch (IOException e) {
-            System.out.println("❌ Error al escribir archivo de certificados.");
+            System.out.println("Error al escribir archivo de certificados.");
         }
     }
 
@@ -188,6 +188,11 @@ public class SistemaGestionAcademica {
     }
 
     private void guardarArchivosTxt() {
+        File dataDir = new File("Data");
+        if (!dataDir.exists()) {
+            dataDir.mkdir();
+        }
+
         try (PrintWriter pw = new PrintWriter(new FileWriter(archivoAlumnos))) {
             for (Alumno a : alumnos) {
                 List<Float> notas = a.getNotas();
@@ -198,7 +203,7 @@ public class SistemaGestionAcademica {
                            a.getPrograma().getNombrePrograma() + "," + n1 + "," + n2 + "," + n3);
             }
         } catch (IOException e) {
-            System.out.println("❌ Error al guardar archivo de alumnos.");
+            System.out.println("Error al guardar archivo de alumnos.");
         }
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(archivoProfesores))) {
@@ -207,11 +212,16 @@ public class SistemaGestionAcademica {
                            p.getEspecialidad() + "," + p.getMateriaAsignada());
             }
         } catch (IOException e) {
-            System.out.println("❌ Error al guardar archivo de profesores.");
+            System.out.println("Error al guardar archivo de profesores.");
         }
     }
 
     private void cargarArchivosTxt() {
+        File dataDir = new File("Data");
+        if (!dataDir.exists()) {
+            dataDir.mkdir();
+        }
+
         File fAlumnos = new File(archivoAlumnos);
         if (fAlumnos.exists()) {
             try (BufferedReader br = new BufferedReader(new FileReader(fAlumnos))) {
@@ -244,7 +254,7 @@ public class SistemaGestionAcademica {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("⚠️ Error al cargar archivo de alumnos.");
+                System.out.println("Error al cargar archivo de alumnos.");
             }
         }
 
@@ -264,7 +274,7 @@ public class SistemaGestionAcademica {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("⚠️ Error al cargar archivo de profesores.");
+                System.out.println("Error al cargar archivo de profesores.");
             }
         }
     }

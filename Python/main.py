@@ -1,8 +1,9 @@
 import os
 
 # ==========================================
-# JERARQUÍA DE PROGRAMAS ACADÉMICOS (POLIMORFISMO)
+# JERARQUIA DE PROGRAMAS ACADEMICOS (POLIMORFISMO)
 # ==========================================
+
 class ProgramaAcademico:
     def __init__(self, nombre_programa):
         self._nombre_programa = nombre_programa
@@ -11,7 +12,8 @@ class ProgramaAcademico:
         return self._nombre_programa
 
     def evaluar_aprobacion(self, notas):
-        raise NotImplementedError("Método abstracto debe ser implementado en la subclase")
+        raise NotImplementedError("Metodo abstracto debe ser implementado en la subclase")
+
 
 class Curso(ProgramaAcademico):
     def __init__(self):
@@ -23,6 +25,7 @@ class Curso(ProgramaAcademico):
         promedio = sum(notas) / len(notas)
         return promedio >= 10.0
 
+
 class Diplomado(ProgramaAcademico):
     def __init__(self):
         super().__init__("Diplomado")
@@ -33,6 +36,7 @@ class Diplomado(ProgramaAcademico):
         promedio = sum(notas) / len(notas)
         return promedio >= 14.0
 
+
 class Bootcamp(ProgramaAcademico):
     def __init__(self):
         super().__init__("Bootcamp")
@@ -40,12 +44,13 @@ class Bootcamp(ProgramaAcademico):
     def evaluar_aprobacion(self, notas):
         if not notas:
             return False
-        # Exige estrictamente que ninguna nota individual sea menor a 14/20
         return all(nota >= 14.0 for nota in notas)
 
+
 # ==========================================
-# JERARQUÍA DE PERSONAS
+# JERARQUIA DE PERSONAS
 # ==========================================
+
 class Persona:
     def __init__(self, cedula, nombre, correo):
         self._cedula = cedula
@@ -63,6 +68,7 @@ class Persona:
 
     def mostrar_informacion(self):
         return f"ID: {self._cedula} | Nombre: {self._nombre} | Correo: {self._correo}"
+
 
 class Alumno(Persona):
     def __init__(self, cedula, nombre, correo, programa):
@@ -99,7 +105,10 @@ class Alumno(Persona):
         prom = self.obtener_promedio()
         estatus = "APROBADO" if self.esta_aprobado() else "REPROBADO"
         notas_str = ", ".join(map(str, self._notas)) if self._notas else "Sin notas"
-        return f"[Alumno] {super().mostrar_informacion()} | Prog: {self._programa.get_nombre_programa()} | Notas: [{notas_str}] | Prom: {prom:.1f} | Estatus: {estatus}"
+        return (f"[Alumno] {super().mostrar_informacion()} | "
+                f"Prog: {self._programa.get_nombre_programa()} | "
+                f"Notas: [{notas_str}] | Prom: {prom:.1f} | Estatus: {estatus}")
+
 
 class Profesor(Persona):
     def __init__(self, cedula, nombre, correo, especialidad, materia_asignada):
@@ -114,31 +123,34 @@ class Profesor(Persona):
         return self._materia_asignada
 
     def mostrar_informacion(self):
-        return f"[Profesor] {super().mostrar_informacion()} | Esp: {self._especialidad} | Materia: {self._materia_asignada}"
+        return (f"[Profesor] {super().mostrar_informacion()} | "
+                f"Esp: {self._especialidad} | Materia: {self._materia_asignada}")
+
 
 # ==========================================
-# CLASE DE GESTIÓN CENTRAL Y PERSISTENCIA
+# CLASE DE GESTION CENTRAL Y PERSISTENCIA
 # ==========================================
+
 class SistemaGestionAcademica:
     def __init__(self):
         self.alumnos = []
         self.profesores = []
-        self.pila_comandos = []  # Estructura LIFO para deshacer nota (guarda tuplas: (cedula, nota))
-        self.cola_certificados = []  # Estructura FIFO para la cola de graduandos
+        self.pila_comandos = []
+        self.cola_certificados = []
 
-        self.archivo_alumnos = "alumnos.txt"
-        self.archivo_profesores = "profesores.txt"
-        self.archivo_certificados = "certificados_pendientes.txt"
+        self.archivo_alumnos = "Data/alumnos.txt"
+        self.archivo_profesores = "Data/profesores.txt"
+        self.archivo_certificados = "Data/certificados_pendientes.txt"
 
         self.cargar_archivos_txt()
 
     def registrar_alumno(self):
         print("\n--- Registrar Alumno ---")
-        cedula = input("Cédula/ID: ").strip()
+        cedula = input("Cedula/ID: ").strip()
         nombre = input("Nombre Completo: ").strip()
-        correo = input("Correo Electrónico: ").strip()
+        correo = input("Correo Electronico: ").strip()
         print("Seleccione Programa: 1. Curso | 2. Diplomado | 3. Bootcamp")
-        opc_prog = input("Opción (1-3): ").strip()
+        opc_prog = input("Opcion (1-3): ").strip()
 
         if opc_prog == "1":
             prog = Curso()
@@ -147,77 +159,75 @@ class SistemaGestionAcademica:
         elif opc_prog == "3":
             prog = Bootcamp()
         else:
-            print("❌ Opción de programa inválida.")
+            print("Opcion de programa invalida.")
             return
 
         alumno = Alumno(cedula, nombre, correo, prog)
         self.alumnos.append(alumno)
         self.guardar_archivos_txt()
-        print("✅ Alumno registrado exitosamente.")
+        print("Alumno registrado exitosamente.")
 
     def registrar_profesor(self):
         print("\n--- Registrar Profesor ---")
-        cedula = input("Cédula/ID: ").strip()
+        cedula = input("Cedula/ID: ").strip()
         nombre = input("Nombre Completo: ").strip()
-        correo = input("Correo Electrónico: ").strip()
+        correo = input("Correo Electronico: ").strip()
         especialidad = input("Especialidad: ").strip()
         materia = input("Materia Asignada: ").strip()
 
         profesor = Profesor(cedula, nombre, correo, especialidad, materia)
         self.profesores.append(profesor)
         self.guardar_archivos_txt()
-        print("✅ Profesor registrado exitosamente.")
+        print("Profesor registrado exitosamente.")
 
     def registrar_nota(self):
         print("\n--- Registrar Nota ---")
-        cedula = input("Ingrese Cédula del Alumno: ").strip()
+        cedula = input("Ingrese Cedula del Alumno: ").strip()
         alumno = next((a for a in self.alumnos if a.get_cedula() == cedula), None)
 
         if not alumno:
-            print("❌ Alumno no encontrado.")
+            print("Alumno no encontrado.")
             return
 
         try:
             nota = float(input("Ingrese nota (0 - 20): "))
             if nota < 0 or nota > 20:
-                print("❌ La nota debe estar entre 0 y 20.")
+                print("La nota debe estar entre 0 y 20.")
                 return
-            
+
             if alumno.agregar_nota(nota):
-                self.pila_comandos.append((cedula, nota))  # Apilar acción LIFO
+                self.pila_comandos.append((cedula, nota))
                 self.guardar_archivos_txt()
-                print("✅ Nota registrada exitosamente.")
+                print("Nota registrada exitosamente.")
             else:
-                print("❌ El alumno ya tiene el máximo de 3 notas ingresadas.")
+                print("El alumno ya tiene el maximo de 3 notas ingresadas.")
         except ValueError:
-            print("❌ Error: Ingrese un valor numérico válido.")
+            print("Error: Ingrese un valor numerico valido.")
 
     def deshacer_ultima_nota(self):
-        print("\n--- Deshacer Último Registro de Nota (LIFO) ---")
+        print("\n--- Deshacer Ultimo Registro de Nota (LIFO) ---")
         if not self.pila_comandos:
-            print("⚠️ No hay acciones recientes para deshacer.")
+            print("No hay acciones recientes para deshacer.")
             return
 
-        cedula, nota_eliminada = self.pila_comandos.pop()  # LIFO
+        cedula, nota_eliminada = self.pila_comandos.pop()
         alumno = next((a for a in self.alumnos if a.get_cedula() == cedula), None)
 
         if alumno:
             alumno.deshacer_nota()
             self.guardar_archivos_txt()
-            print(f"✅ Se removió la nota {nota_eliminada} del alumno {alumno.get_nombre()}.")
+            print(f"Se removio la nota {nota_eliminada} del alumno {alumno.get_nombre()}.")
 
     def generar_cola_certificados(self):
         print("\n--- Generar Cola de Certificados (FIFO) ---")
         self.cola_certificados.clear()
 
-        # Filtrar solo alumnos aprobados
         for alumno in self.alumnos:
             if alumno.esta_aprobado():
-                self.cola_certificados.append(alumno)  # Encolar FIFO
+                self.cola_certificados.append(alumno)
 
-        print(f" Total graduandos procesados en cola: {len(self.cola_certificados)}")
-        
-        # Exportar a certificados_pendientes.txt
+        print(f"Total graduandos procesados en cola: {len(self.cola_certificados)}")
+
         with open(self.archivo_certificados, "w", encoding="utf-8") as f:
             f.write("=========================================\n")
             f.write("REPORTE DE CERTIFICADOS PENDIENTES\n")
@@ -233,7 +243,7 @@ class SistemaGestionAcademica:
             f.write("=========================================\n")
             f.write("* Fin del reporte - Generado por SGA-DO *\n")
 
-        print(f"✅ Archivo '{self.archivo_certificados}' generado con éxito.")
+        print(f"Archivo '{self.archivo_certificados}' generado con exito.")
 
     def mostrar_reporte_general(self):
         print("\n=========================================")
@@ -253,6 +263,9 @@ class SistemaGestionAcademica:
         print("=========================================\n")
 
     def guardar_archivos_txt(self):
+        if not os.path.exists("Data"):
+            os.makedirs("Data")
+
         with open(self.archivo_alumnos, "w", encoding="utf-8") as f:
             for a in self.alumnos:
                 notas = a.get_notas()
@@ -267,6 +280,9 @@ class SistemaGestionAcademica:
                 f.write(f"{p.get_cedula()},{p.get_nombre()},{p.get_correo()},{p.get_especialidad()},{p.get_materia_asignada()}\n")
 
     def cargar_archivos_txt(self):
+        if not os.path.exists("Data"):
+            os.makedirs("Data")
+
         if os.path.exists(self.archivo_alumnos):
             with open(self.archivo_alumnos, "r", encoding="utf-8") as f:
                 for linea in f:
@@ -296,8 +312,9 @@ class SistemaGestionAcademica:
 
 
 # ==========================================
-# MENÚ INTERACTIVO PRINCIPAL
+# MENU INTERACTIVO PRINCIPAL
 # ==========================================
+
 def main():
     sistema = SistemaGestionAcademica()
 
@@ -308,12 +325,12 @@ def main():
         print("1. Registrar Alumno")
         print("2. Registrar Profesor")
         print("3. Registrar Notas a un Alumno")
-        print("4. Deshacer Último Registro de Nota")
+        print("4. Deshacer Ultimo Registro de Nota")
         print("5. Generar Cola de Certificados")
         print("6. Mostrar Reporte General")
         print("7. Salir")
 
-        opcion = input("Seleccione una opción (1-7): ").strip()
+        opcion = input("Seleccione una opcion (1-7): ").strip()
 
         if opcion == "1":
             sistema.registrar_alumno()
@@ -328,10 +345,11 @@ def main():
         elif opcion == "6":
             sistema.mostrar_reporte_general()
         elif opcion == "7":
-            print("\n💾 Guardando datos y cerrando sistema de forma segura. ¡Hasta luego!")
+            print("\nGuardando datos y cerrando sistema de forma segura. Hasta luego!")
             break
         else:
-            print("❌ Opción inválida. Intente de nuevo.")
+            print("Opcion invalida. Intente de nuevo.")
+
 
 if __name__ == "__main__":
     main()

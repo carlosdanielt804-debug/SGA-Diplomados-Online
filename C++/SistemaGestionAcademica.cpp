@@ -8,10 +8,13 @@
 #include <iomanip>
 #include <algorithm>
 
-SistemaGestionAcademica::SistemaGestionAcademica()
-    : archivoAlumnos("alumnos.txt"), 
-      archivoProfesores("profesores.txt"),
-      archivoCertificados("certificados_pendientes.txt") {
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#endif
+
+SistemaGestionAcademica::SistemaGestionAcademica() {
     cargarArchivosTxt();
 }
 
@@ -20,25 +23,21 @@ SistemaGestionAcademica::~SistemaGestionAcademica() {
 }
 
 void SistemaGestionAcademica::limpiarMemoria() {
-    // Liberar memoria de alumnos
     for (Alumno* a : alumnos) {
         delete a;
     }
     alumnos.clear();
 
-    // Liberar memoria de profesores
     for (Profesor* p : profesores) {
         delete p;
     }
     profesores.clear();
 
-    // Liberar memoria de la pila
     while (!pilaComandos.empty()) {
         delete pilaComandos.top();
         pilaComandos.pop();
     }
 
-    // Liberar memoria de la cola
     while (!colaCertificados.empty()) {
         colaCertificados.pop();
     }
@@ -46,17 +45,17 @@ void SistemaGestionAcademica::limpiarMemoria() {
 
 void SistemaGestionAcademica::registrarAlumno() {
     std::cout << "\n--- Registrar Alumno ---\n";
-    
+
     std::string cedula, nombre, correo, opc;
-    std::cout << "Cédula/ID: ";
+    std::cout << "Cedula/ID: ";
     std::getline(std::cin, cedula);
     std::cout << "Nombre Completo: ";
     std::getline(std::cin, nombre);
-    std::cout << "Correo Electrónico: ";
+    std::cout << "Correo Electronico: ";
     std::getline(std::cin, correo);
-    
+
     std::cout << "Seleccione Programa: 1. Curso | 2. Diplomado | 3. Bootcamp\n";
-    std::cout << "Opción (1-3): ";
+    std::cout << "Opcion (1-3): ";
     std::getline(std::cin, opc);
 
     ProgramaAcademico* prog = nullptr;
@@ -67,25 +66,25 @@ void SistemaGestionAcademica::registrarAlumno() {
     } else if (opc == "3") {
         prog = new Bootcamp();
     } else {
-        std::cout << "❌ Opción de programa inválida.\n";
+        std::cout << "Opcion de programa invalida.\n";
         return;
     }
 
     Alumno* alumno = new Alumno(cedula, nombre, correo, prog);
     alumnos.push_back(alumno);
     guardarArchivosTxt();
-    std::cout << "✅ Alumno registrado exitosamente.\n";
+    std::cout << "Alumno registrado exitosamente.\n";
 }
 
 void SistemaGestionAcademica::registrarProfesor() {
     std::cout << "\n--- Registrar Profesor ---\n";
-    
+
     std::string cedula, nombre, correo, especialidad, materia;
-    std::cout << "Cédula/ID: ";
+    std::cout << "Cedula/ID: ";
     std::getline(std::cin, cedula);
     std::cout << "Nombre Completo: ";
     std::getline(std::cin, nombre);
-    std::cout << "Correo Electrónico: ";
+    std::cout << "Correo Electronico: ";
     std::getline(std::cin, correo);
     std::cout << "Especialidad: ";
     std::getline(std::cin, especialidad);
@@ -95,12 +94,12 @@ void SistemaGestionAcademica::registrarProfesor() {
     Profesor* profesor = new Profesor(cedula, nombre, correo, especialidad, materia);
     profesores.push_back(profesor);
     guardarArchivosTxt();
-    std::cout << "✅ Profesor registrado exitosamente.\n";
+    std::cout << "Profesor registrado exitosamente.\n";
 }
 
 void SistemaGestionAcademica::registrarNota() {
     std::cout << "\n--- Registrar Nota ---\n";
-    std::cout << "Ingrese Cédula del Alumno: ";
+    std::cout << "Ingrese Cedula del Alumno: ";
     std::string cedula;
     std::getline(std::cin, cedula);
 
@@ -113,7 +112,7 @@ void SistemaGestionAcademica::registrarNota() {
     }
 
     if (alumno == nullptr) {
-        std::cout << "❌ Alumno no encontrado.\n";
+        std::cout << "Alumno no encontrado.\n";
         return;
     }
 
@@ -124,27 +123,27 @@ void SistemaGestionAcademica::registrarNota() {
         float nota = std::stof(input);
 
         if (nota < 0 || nota > 20) {
-            std::cout << "❌ La nota debe estar entre 0 y 20.\n";
+            std::cout << "La nota debe estar entre 0 y 20.\n";
             return;
         }
 
         if (alumno->agregarNota(nota)) {
-            pilaComandos.push(new AccionNota(cedula, nota)); // LIFO
+            pilaComandos.push(new AccionNota(cedula, nota));
             guardarArchivosTxt();
-            std::cout << "✅ Nota registrada exitosamente.\n";
+            std::cout << "Nota registrada exitosamente.\n";
         } else {
-            std::cout << "❌ El alumno ya tiene el máximo de 3 notas ingresadas.\n";
+            std::cout << "El alumno ya tiene el maximo de 3 notas ingresadas.\n";
         }
     } catch (const std::exception& e) {
-        std::cout << "❌ Error: Ingrese un valor numérico válido.\n";
+        std::cout << "Error: Ingrese un valor numerico valido.\n";
     }
 }
 
 void SistemaGestionAcademica::deshacerUltimaNota() {
-    std::cout << "\n--- Deshacer Último Registro de Nota (LIFO) ---\n";
-    
+    std::cout << "\n--- Deshacer Ultimo Registro de Nota (LIFO) ---\n";
+
     if (pilaComandos.empty()) {
-        std::cout << "⚠️ No hay acciones recientes para deshacer.\n";
+        std::cout << "No hay acciones recientes para deshacer.\n";
         return;
     }
 
@@ -155,7 +154,7 @@ void SistemaGestionAcademica::deshacerUltimaNota() {
         if (a->getCedula() == ultimaAccion->getCedula()) {
             a->deshacerNota();
             guardarArchivosTxt();
-            std::cout << "✅ Se removió la nota " << ultimaAccion->getNota() 
+            std::cout << "Se removio la nota " << ultimaAccion->getNota()
                       << " del alumno " << a->getNombre() << ".\n";
             delete ultimaAccion;
             return;
@@ -166,22 +165,19 @@ void SistemaGestionAcademica::deshacerUltimaNota() {
 
 void SistemaGestionAcademica::generarColaCertificados() {
     std::cout << "\n--- Generar Cola de Certificados (FIFO) ---\n";
-    
-    // Vaciar cola anterior
+
     while (!colaCertificados.empty()) {
         colaCertificados.pop();
     }
 
-    // Filtrar alumnos aprobados
     for (Alumno* a : alumnos) {
         if (a->estaAprobado()) {
-            colaCertificados.push(a); // FIFO
+            colaCertificados.push(a);
         }
     }
 
     std::cout << "Total graduandos procesados en cola: " << colaCertificados.size() << "\n";
 
-    // Exportar a certificados_pendientes.txt
     std::ofstream file(archivoCertificados);
     if (file.is_open()) {
         file << "=========================================\n";
@@ -194,7 +190,7 @@ void SistemaGestionAcademica::generarColaCertificados() {
         while (!tempCola.empty()) {
             Alumno* al = tempCola.front();
             tempCola.pop();
-            
+
             file << idx << ". [" << al->getCedula() << "] " << al->getNombre() << "\n";
             file << "   - Programa: " << al->getPrograma()->getNombrePrograma() << "\n";
             file << std::fixed << std::setprecision(1);
@@ -206,9 +202,9 @@ void SistemaGestionAcademica::generarColaCertificados() {
         file << "=========================================\n";
         file << "* Fin del reporte - Generado por SGA-DO *\n";
         file.close();
-        std::cout << "✅ Archivo '" << archivoCertificados << "' generado con éxito.\n";
+        std::cout << "Archivo '" << archivoCertificados << "' generado con exito.\n";
     } else {
-        std::cout << "❌ Error al escribir archivo de certificados.\n";
+        std::cout << "Error al escribir archivo de certificados.\n";
     }
 }
 
@@ -216,7 +212,7 @@ void SistemaGestionAcademica::mostrarReporteGeneral() {
     std::cout << "\n=========================================\n";
     std::cout << "          REPORTE GENERAL SGA-DO         \n";
     std::cout << "=========================================\n";
-    
+
     std::cout << "\n--- PROFESORES ACTIVOS ---\n";
     if (profesores.empty()) {
         std::cout << "No hay profesores registrados.\n";
@@ -238,7 +234,12 @@ void SistemaGestionAcademica::mostrarReporteGeneral() {
 }
 
 void SistemaGestionAcademica::guardarArchivosTxt() {
-    // Guardar alumnos
+    #ifdef _WIN32
+        _mkdir("Data");
+    #else
+        mkdir("Data", 0777);
+    #endif
+
     std::ofstream fileAlumnos(archivoAlumnos);
     if (fileAlumnos.is_open()) {
         for (Alumno* a : alumnos) {
@@ -246,7 +247,7 @@ void SistemaGestionAcademica::guardarArchivosTxt() {
             float n1 = notas.size() > 0 ? notas[0] : 0;
             float n2 = notas.size() > 1 ? notas[1] : 0;
             float n3 = notas.size() > 2 ? notas[2] : 0;
-            
+
             fileAlumnos << a->getCedula() << ","
                         << a->getNombre() << ","
                         << a->getCorreo() << ","
@@ -256,7 +257,6 @@ void SistemaGestionAcademica::guardarArchivosTxt() {
         fileAlumnos.close();
     }
 
-    // Guardar profesores
     std::ofstream fileProfesores(archivoProfesores);
     if (fileProfesores.is_open()) {
         for (Profesor* p : profesores) {
@@ -271,7 +271,12 @@ void SistemaGestionAcademica::guardarArchivosTxt() {
 }
 
 void SistemaGestionAcademica::cargarArchivosTxt() {
-    // Cargar alumnos
+    #ifdef _WIN32
+        _mkdir("Data");
+    #else
+        mkdir("Data", 0777);
+    #endif
+
     std::ifstream fileAlumnos(archivoAlumnos);
     if (fileAlumnos.is_open()) {
         std::string linea;
@@ -279,7 +284,7 @@ void SistemaGestionAcademica::cargarArchivosTxt() {
             std::stringstream ss(linea);
             std::string cedula, nombre, correo, tipoPrograma;
             float n1, n2, n3;
-            
+
             std::getline(ss, cedula, ',');
             std::getline(ss, nombre, ',');
             std::getline(ss, correo, ',');
@@ -308,14 +313,13 @@ void SistemaGestionAcademica::cargarArchivosTxt() {
         fileAlumnos.close();
     }
 
-    // Cargar profesores
     std::ifstream fileProfesores(archivoProfesores);
     if (fileProfesores.is_open()) {
         std::string linea;
         while (std::getline(fileProfesores, linea)) {
             std::stringstream ss(linea);
             std::string cedula, nombre, correo, especialidad, materia;
-            
+
             std::getline(ss, cedula, ',');
             std::getline(ss, nombre, ',');
             std::getline(ss, correo, ',');

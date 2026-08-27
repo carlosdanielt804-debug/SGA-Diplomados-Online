@@ -1,8 +1,8 @@
 #include "Profesor.h"
 #include <sstream>
 
-Profesor::Profesor(const std::string& cedula, const std::string& nombre, 
-                   const std::string& correo, const std::string& especialidad, 
+Profesor::Profesor(const std::string& cedula, const std::string& nombre,
+                   const std::string& correo, const std::string& especialidad,
                    const std::string& materiaAsignada)
     : Persona(cedula, nombre, correo), especialidad(especialidad), materiaAsignada(materiaAsignada) {}
 
@@ -16,8 +16,8 @@ std::string Profesor::getMateriaAsignada() const {
 
 std::string Profesor::mostrarInformacion() const {
     std::ostringstream oss;
-    oss << "[Profesor] ID: " << cedula 
-        << " | Nombre: " << nombre 
+    oss << "[Profesor] ID: " << cedula
+        << " | Nombre: " << nombre
         << " | Correo: " << correo
         << " | Esp: " << especialidad
         << " | Materia: " << materiaAsignada;

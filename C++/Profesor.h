@@ -9,8 +9,8 @@ private:
     std::string materiaAsignada;
 
 public:
-    Profesor(const std::string& cedula, const std::string& nombre, 
-             const std::string& correo, const std::string& especialidad, 
+    Profesor(const std::string& cedula, const std::string& nombre,
+             const std::string& correo, const std::string& especialidad,
              const std::string& materiaAsignada);
     virtual ~Profesor() {}
 
